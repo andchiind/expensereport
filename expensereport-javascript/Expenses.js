@@ -1,7 +1,10 @@
+const  assert = require("node:assert");
 class BaseExpense {
   name;
   limit;
+  isMealExpense = true;
   #value;
+
   constructor(value) {
     this.#value = value;
   }
@@ -12,6 +15,10 @@ class BaseExpense {
   toString() {
     const marker = this.isValid() ? "" : "\tX";
     return `${this.name}\t${this.#value}${marker}`;
+  }
+
+  amount() {
+    return this.#value;
   }
 }
 
@@ -33,38 +40,45 @@ class Lunch extends BaseExpense{
 class CarRental extends BaseExpense{
   name = "Car Rental";
   limit = null;
+  isMealExpense = false;
+
+  isValid() {
+    return true
+  }
 }
 
-const expenseNameMap = {};
-ßß;
+process.stdout.writeln = (str) => process.stdout.write(str + "\n");
+
 function printReport(expenses) {
+  assert(Array.isArray(expenses));
+  assert(expenses.every(x => x instanceof BaseExpense));
+
   let total = 0;
   let mealExpenses = 0;
 
-  process.stdout.write(
-    "Expenses " + new Date().toISOString().slice(0, 10) + "\n",
+  process.stdout.writeln(
+    "Expenses " + new Date().toISOString().slice(0, 10),
   );
 
   for (const expense of expenses) {
-    if (
-      expense.type == type.DINNER ||
-      expense.type == type.BREAKFAST ||
-      expense.type == type.LUNCH
-    ) {
-      mealExpenses += expense.amount;
-    }
 
-    process.stdout.write(expense.toString());
-    total += expense.amount;
+    if (expense.isMealExpense) {
+      mealExpenses += expense.amount();
+    }
+    
+    process.stdout.writeln(expense.toString());
+    total += expense.amount();
   }
 
-  process.stdout.write("Meal expenses: " + mealExpenses);
-  process.stdout.write("Total expenses: " + total);
+  process.stdout.writeln("Meal expenses: " + mealExpenses);
+  process.stdout.writeln("Total expenses: " + total);
 }
 
+// printReport();
 printReport([
-  { type: type.BREAKFAST, amount: 500 },
-  { type: type.DINNER, amount: 6000 },
-  { type: type.LUNCH, amount: 1000 },
-  { type: type.LUNCH, amount: 3000 },
+    new Breakfast(500),
+    new Dinner(6000),
+    new Lunch(1000),
+    new Lunch(3000),
+    new CarRental(1000000),
 ]);
