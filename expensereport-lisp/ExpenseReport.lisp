@@ -10,7 +10,7 @@
   (error "Not applicable to base class."))
 
 (defmethod print-object ((obj base-expense) stream)
-  (format stream "~64<~a:~;~> ~6d~:[~; X~]"
+  (format stream "~64<~a:~;~6d~>~:[~; X~]"
           (name obj)
           (value obj) (is-over-limit obj)))
 
@@ -51,8 +51,8 @@
         (incf meal-expenses (value expense)))
       (incf total-expenses (value expense))
       (format t "~a~%" expense))
-    (format t "~64<~a:~;~> ~6d~%" "Meal Expenses" meal-expenses)
-    (format t "~64<~a:~;~> ~6d~%" "Total Expenses" total-expenses)))
+    (format t "~64<~a:~;~6d~>~%" "Meal Expenses" meal-expenses)
+    (format t "~64<~a:~;~6d~>~%" "Total Expenses" total-expenses)))
 
 #||
 (print-report
